@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Configuration;
+﻿using IROFramework.Core.AppEnvironment.SettingsDto;
+using Microsoft.Extensions.Configuration;
 using Newtonsoft.Json.Linq;
 
 namespace IROFramework.Core.AppEnvironment
@@ -16,7 +17,7 @@ namespace IROFramework.Core.AppEnvironment
         {
             //This used to allow injecting all app settings in ine environment variable with json.
             //Used to deploy on heroku.
-            
+
             var settingsInEnvProperty = _config.GetValue<string>("APP_SETTINGS");
             if (string.IsNullOrWhiteSpace(settingsInEnvProperty))
             {
