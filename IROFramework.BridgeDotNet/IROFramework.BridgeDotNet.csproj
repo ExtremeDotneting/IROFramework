@@ -1,0 +1,117 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <NoStdLib>true</NoStdLib>
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{E7295D8E-83B6-43DF-AA6A-C93EF8B677EC}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Libs</RootNamespace>
+    <AssemblyName>IROFramework.BridgeDotNet</AssemblyName>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="App.cs" />
+    <Compile Include="Extensions\BridgeCommonExtensions.cs" />
+    <Compile Include="Extensions\EnumExt.cs" />
+    <Compile Include="Extensions\ExceptionExt.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.DependencyInjection\ICustomServiceProvider.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.DependencyInjection\ServiceCollectionExtensions.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.DependencyInjection\IServiceCollection.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.DependencyInjection\ServiceInfo.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.DependencyInjection\ServiceProviderExtensions.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.DependencyInjection\ServiceCollection.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\Factories\LoggerFactory.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\Loggers\ILogger.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\Factories\ILoggerFactory.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\Loggers\Logger.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\TypeNameHelper.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\Loggers\LoggerExtensions.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\FakeScope.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\Factories\LoggerFactoryExtensions.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\LogLevel.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\Loggers\NullLogger.cs" />
+    <Compile Include="Libs\Microsoft.Extensions.Logging\Factories\NullLoggerFactory.cs" />
+    <Compile Include="Libs\System\Collections\Concurrent\ConcurrentDictionary.cs" />
+    <Compile Include="Libs\System\Collections\Generic\PlainDictionary.cs" />
+    <Compile Include="Libs\System\Lazy.cs" />
+    <Compile Include="Libs\System\Net\Http\Exceptions\XMLHttpRequestException.cs" />
+    <Compile Include="Libs\System\Net\Http\HttpContentModels\FormUrlEncodedContent.cs" />
+    <Compile Include="Libs\System\Net\Http\HttpClient.cs" />
+    <Compile Include="Libs\System\Net\Http\HttpContentModels\HttpContent.cs" />
+    <Compile Include="Libs\System\Net\Http\HttpMethod.cs" />
+    <Compile Include="Libs\System\Net\Http\HttpRequestMessage.cs" />
+    <Compile Include="Libs\System\Net\Http\HttpResponseMessage.cs" />
+    <Compile Include="Libs\System\Net\Http\HttpContentModels\StringContent.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\Exceptions\ApiException.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\Extensions\CommonExtensions.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\HttpApiClient.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\HttpApiClient.Generated.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\HttpConfiguration.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\IHttpApiClient.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\Models\ApiResponse.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\Models\RequestLogSerializeDto.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\Services\ExceptionsFactory.cs" />
+    <Compile Include="Libs\UndergroundIRO.ApiBase\Services\IExceptionsFactory.cs" />
+    <Compile Include="Metadata\EnumItemTextAttribute.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\BrowserConsole.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="bridge.json" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Reference Include="Bridge, Version=17.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Bridge.Core.17.10.1\lib\net40\Bridge.dll</HintPath>
+    </Reference>
+    <Reference Include="Bridge.Aspect, Version=1.14.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Bridge.Aspect.1.14.1\lib\net40\Bridge.Aspect.dll</HintPath>
+    </Reference>
+    <Reference Include="Bridge.Html5, Version=17.10.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Bridge.Html5.17.10.0\lib\net40\Bridge.Html5.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=1.17.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\..\..\packages\Bridge.Newtonsoft.Json.1.17.0\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Libs\readme.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <Import Project="..\..\..\packages\Bridge.Min.17.10.1\build\Bridge.Min.targets" Condition="Exists('..\..\..\packages\Bridge.Min.17.10.1\build\Bridge.Min.targets')" />
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>This project references NuGet package(s) that are missing on this computer. Use NuGet Package Restore to download them.  For more information, see http://go.microsoft.com/fwlink/?LinkID=322105. The missing file is {0}.</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\..\..\packages\Bridge.Min.17.10.1\build\Bridge.Min.targets')" Text="$([System.String]::Format('$(ErrorText)', '..\..\..\packages\Bridge.Min.17.10.1\build\Bridge.Min.targets'))" />
+  </Target>
+</Project>
