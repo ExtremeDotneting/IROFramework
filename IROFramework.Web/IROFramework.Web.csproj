@@ -14,13 +14,15 @@
     
     <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.9.0" />
     <PackageReference Include="Serilog.AspNetCore" Version="4.1.0" />
-    <PackageReference Include="Telegram.Bot.AspNetPipeline" Version="1.2.2" />
-    <PackageReference Include="Telegram.Bot.CloudStorage" Version="1.2.2" />
 
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\IROFramework.Core\IROFramework.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Dto\FilesStorageDto\" />
   </ItemGroup>
 
 

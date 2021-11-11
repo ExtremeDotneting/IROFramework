@@ -2,6 +2,7 @@
 using IRO.Storage;
 using IROFramework.Core.AppEnvironment;
 using IROFramework.Core.AppEnvironment.SettingsDto;
+using IROFramework.Web.Dto.FilesStorageDto;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
@@ -57,9 +58,27 @@ namespace IROFramework.Web.StartupInit
                 CacheAndNotWait = true,
                 DeleteOlderFiles = false
             });
-            services.AddSingleton<TelegramFilesCloud>();
+            services.AddSingleton<TelegramFilesCloud<FileMetadata>>();
         }
 
+        /// <summary>
+        /// Redirect site root '/' to '/index.html'.
+        /// </summary>
+        public static void UseIndexHtmlRedirect(this IApplicationBuilder app)
+        {
+            app.Use(async (ctx, next) =>
+            {
+                var url = ctx.Request.Path.Value;
+                if (string.IsNullOrEmpty(url) || url.Trim() == "/")
+                {
+                    ctx.Response.Redirect(Env.ExternalUrl + "/index.html");
+                }
+                else
+                {
+                    await next();
+                }
+            });
+        }
 
     }
 }

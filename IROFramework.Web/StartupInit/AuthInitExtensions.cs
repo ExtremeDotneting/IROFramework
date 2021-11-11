@@ -19,11 +19,13 @@ namespace IROFramework.Web.StartupInit
     {
         public static void AddMyAuth(this IServiceCollection services)
         {
+            var authSettings=Env.GetValue<AuthSettings>();
+            services.AddSingleton(authSettings);
             var jwtAuthOpt = new JwtAuthManagerOptions()
             {
-                AccessTokenExpiration = TimeSpan.FromMinutes(Env.GetValue<AuthSettings>().AccessTokenExpirationMinutes),
-                RefreshTokenExpiration = TimeSpan.FromMinutes(Env.GetValue<AuthSettings>().RefreshTokenExpirationMinutes),
-                Secret = Env.GetValue<AuthSettings>().Secret,
+                AccessTokenExpiration = TimeSpan.FromMinutes(authSettings.AccessTokenExpirationMinutes),
+                RefreshTokenExpiration = TimeSpan.FromMinutes(authSettings.RefreshTokenExpirationMinutes),
+                Secret = authSettings.Secret,
                 Audience = Env.ExternalUrl,
                 Issuer = Env.ExternalUrl
             };

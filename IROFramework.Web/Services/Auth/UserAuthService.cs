@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using IROFramework.Core.AppEnvironment.SettingsDto;
 using IROFramework.Core.Consts;
 using IROFramework.Core.Models;
 using IROFramework.Core.Tools;
@@ -16,11 +17,24 @@ namespace IROFramework.Web.Services.Auth
         readonly IDatabaseSet<UserModel, Guid> _dbSet;
 
         readonly IJwtAuthManager _authManager;
+        readonly AuthSettings _authSettings;
+        static bool _isInitOnce;
 
-        public UserAuthService(AbstractDbContext db, IJwtAuthManager authManager)
+        public UserAuthService(AbstractDbContext db, IJwtAuthManager authManager, AuthSettings authSettings)
         {
             _authManager = authManager;
+            _authSettings = authSettings;
             _dbSet = db.Users;
+            InitOnce().Wait();
+        }
+
+        public async Task InitOnce()
+        {
+            if (_isInitOnce)
+                return;
+
+            await CreateDefaultAdminUser();
+            _isInitOnce = true;
         }
 
         public async Task<AuthResult> RefreshToken(string accessToken, string refreshToken)
@@ -73,6 +87,26 @@ namespace IROFramework.Web.Services.Auth
             var userIdStr = decoded.Principal.FindFirstValue(nameof(UserModel.Id));
             var guid = Guid.Parse(userIdStr);
             return await _dbSet.GetByIdAsync(guid);
+        }
+        
+        async Task CreateDefaultAdminUser()
+        {
+            if (string.IsNullOrWhiteSpace(_authSettings.AdminNickname) || string.IsNullOrWhiteSpace(_authSettings.AdminPassword))
+            {
+                return;
+            }
+            var user = await _dbSet.TryGetByPropertyAsync(r => r.Nickname, _authSettings.AdminNickname);
+            if (user == null || !HashExtensions.Compare(_authSettings.AdminPassword, user.PasswordHash))
+            {
+                var newUser = new UserModel()
+                {
+                    Id = Guid.NewGuid(),
+                    Nickname = _authSettings.AdminNickname,
+                    Role = UserRoles.Admin,
+                    PasswordHash = HashExtensions.HashString(_authSettings.AdminPassword)
+                };
+                await Register(newUser);
+            }
         }
 
         /// <summary>

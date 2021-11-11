@@ -34,11 +34,11 @@ namespace IROFramework.Core.StartupInit
         public static void AddTelegramStorage(this IServiceCollection services)
         {
             //Telegram storage part.
-            var opt = new Telegram.Bot.CloudStorage.Data.TelegramStorageOptions()
+            var opt = new TelegramStorageOptions()
             {
                 SaveResourcesChatId = Env.GetValue<StorageOnTelegramSettings>().SaveResourcesChatId
             };
-            services.AddSingleton(opt);
+            services.AddSingleton(opt); 
             services.AddSingleton<IKeyValueStorage, TelegramStorage>();
         }
 
