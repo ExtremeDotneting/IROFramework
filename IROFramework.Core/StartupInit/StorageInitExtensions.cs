@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using IRO.Storage;
 using IRO.Storage.DefaultStorages;
 using IROFramework.Core.AppEnvironment;
@@ -25,48 +26,49 @@ namespace IROFramework.Core.StartupInit
             {
                 services.AddTelegramStorage();
             }
+            else if (type == StorageType.None)
+            {
+                return;
+            }
             else
             {
-                throw new Exception("Can't recognize storage type settings.");
+                throw new Exception("Can't recognize StorageType settings.");
             }
         }
 
-        public static void AddTelegramStorage(this IServiceCollection services)
+        internal static void AddTelegramBot(IServiceCollection services)
         {
+            var storageOnTelegramSettings = Env.GetValue<StorageOnTelegramSettings>();
+            //Telegram bot part.
+            var bot = new TelegramBotClient(
+                storageOnTelegramSettings.BotToken,
+                new QueuedHttpClient(TimeSpan.FromMilliseconds(50))
+            );
+            services.AddSingleton<ITelegramBotClient>(bot);
+        }
+
+        static void AddTelegramStorage(this IServiceCollection services)
+        {
+            AddTelegramBot(services);
+
+            var appSettings = Env.GetValue<StorageOnTelegramSettings>();
             //Telegram storage part.
             var opt = new TelegramStorageOptions()
             {
-                SaveResourcesChatId = Env.GetValue<StorageOnTelegramSettings>().SaveResourcesChatId
+                SaveResourcesChatId = appSettings.SaveResourcesChatId,
+                SaveOnSet = appSettings.SaveOnSet,
+                LoadOnGet = appSettings.LoadOnGet,
+                //AutoSavesDelay = TimeSpan.FromSeconds(appSettings.AutoSavesDelaySeconds),
+                DeletePreviousMessages = appSettings.DeletePreviousMessages
             };
-            services.AddSingleton(opt); 
+            services.AddSingleton(opt);
             services.AddSingleton<IKeyValueStorage, TelegramStorage>();
         }
 
-        public static void AddRamStorage(this IServiceCollection services)
+        static void AddRamStorage(this IServiceCollection services)
         {
             services.AddSingleton<IKeyValueStorage>(new RamStorage());
         }
 
-        public static void AddTelegramFilesCloud(this IServiceCollection services)
-        {
-            var opt = Env.GetValue<StorageOnTelegramSettings>();
-            //Telegram bot part.
-            var bot = new TelegramBotClient(
-                opt.BotToken,
-                new QueuedHttpClient(TimeSpan.FromMilliseconds(50))
-            );
-            services.AddSingleton<ITelegramBotClient>(bot);
-
-            //Telegram files limit is 50 mb.
-            //Note that with CacheAndNotWait you can operate with any files, but too big files will be not saved in telegram,
-            //so they will be unavailable after app restart.
-            services.AddSingleton(new TelegramFilesCloudOptions()
-            {
-                SaveResourcesChatId = Env.GetValue<StorageOnTelegramSettings>().SaveResourcesChatId,
-                CacheAndNotWait = true,
-                DeleteOlderFiles = false
-            });
-            services.AddSingleton<TelegramFilesCloud>();
-        }
     }
 }

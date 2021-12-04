@@ -1,4 +1,5 @@
 ﻿using System.Threading.Tasks;
+using IRO.Mvc.CoolSwagger;
 using IROFramework.Core.AppEnvironment;
 using IROFramework.Core.Consts;
 using IROFramework.Web.Dto.EmailDto;
@@ -9,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 namespace IROFramework.Web.Controllers
 {
     [ApiController]
+
+    [SwaggerTagName("Email")]
 
     [Route(CommonConsts.ApiPath + "/email")]
     public class EmailController : ControllerBase

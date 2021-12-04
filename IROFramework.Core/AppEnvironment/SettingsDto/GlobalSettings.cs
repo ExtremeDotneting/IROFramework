@@ -18,6 +18,8 @@ namespace IROFramework.Core.AppEnvironment.SettingsDto
         /// </summary>
         public StorageType StorageType { get; set; }
 
+        public DatabaseType DatabaseType { get; set; }
+
         public LogEventLevel LogLevel { get; set; } = LogEventLevel.Error;
 
         public LogEventLevel ConsoleLogLevel { get; set; } = LogEventLevel.Error;

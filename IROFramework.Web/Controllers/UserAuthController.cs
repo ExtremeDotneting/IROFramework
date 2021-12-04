@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Threading.Tasks;
+using IRO.Mvc.CoolSwagger;
 using IROFramework.Core.AppEnvironment;
 using IROFramework.Core.Consts;
 using IROFramework.Core.Models;
@@ -11,6 +12,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IROFramework.Web.Controllers
 {
     [ApiController]
+    [SwaggerTagName("UserAuth")]
     [Route(CommonConsts.ApiPath + "/auth")]
     public class UserAuthController : ControllerBase
     {

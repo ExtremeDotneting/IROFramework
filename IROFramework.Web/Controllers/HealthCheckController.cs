@@ -1,10 +1,11 @@
 ﻿using System.Threading.Tasks;
+using IRO.Mvc.CoolSwagger;
 using Microsoft.AspNetCore.Mvc;
 
 namespace IROFramework.Web.Controllers
 {
     [ApiController]
-
+    [SwaggerTagName("HealthCheck")]
     [Route("health")]
     public class HealthCheckController : ControllerBase
     {

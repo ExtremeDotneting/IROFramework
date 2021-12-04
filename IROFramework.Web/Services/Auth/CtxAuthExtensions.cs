@@ -2,7 +2,6 @@
 using System.Net.Http.Headers;
 using System.Threading.Tasks;
 using IROFramework.Core.Models;
-using IROFramework.Web.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.DependencyInjection;

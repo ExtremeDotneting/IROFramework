@@ -13,9 +13,9 @@ namespace IROFramework.Web.Controllers.Crud
     {
         readonly IDatabaseSet<TModel, TId> _dbSet;
 
-        protected BaseCrudController(IDatabaseSet<TModel, TId> dbSet)
+        protected BaseCrudController(IAbstractDatabase db)
         {
-            _dbSet =dbSet;
+            _dbSet = db.GetDbSet<TModel, TId>();
         }
 
         [Authorize(Roles =UserRoles.Admin)]

@@ -10,7 +10,7 @@ namespace IROFramework.Web.Controllers.Crud
     [Route(CommonConsts.ApiPath + "/crud/user")]
     public class UserCrudController : BaseCrudController<UserModel, Guid>
     {
-        public UserCrudController(IDatabaseSet<UserModel, Guid> dbSet) : base(dbSet)
+        public UserCrudController(IAbstractDatabase db) : base(db)
         {
         }
     }

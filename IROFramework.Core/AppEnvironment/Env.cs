@@ -18,6 +18,8 @@ namespace IROFramework.Core.AppEnvironment
 
         public static string ExternalUrl => GlobalSettings.ExternalUrl;
 
+        public static string SourceName => _envLoader.GetType().Name;
+
         public static void Init(IEnvLoader envLoader)
         {
             if (_envLoader != null)
@@ -42,7 +44,7 @@ namespace IROFramework.Core.AppEnvironment
             {
                 throw new Exception("Env loader not initialized.");
             }
-            var value= _envLoader.GetValue<T>(propName);
+            var value = _envLoader.GetValue<T>(propName);
             _cache[propName] = value;
             return value;
         }

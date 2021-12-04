@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.IO;
-using IROFramework.Core.AppEnvironment;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Primitives;
 
-namespace IROFramework.Web.Dto.FilesStorageDto
+namespace IROFramework.Core.Models
 {
     public class FileMetadata
     {

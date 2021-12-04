@@ -39,28 +39,6 @@ namespace IROFramework.Web.StartupInit
             });
         }
 
-        public static void AddTelegramFilesCloud(this IServiceCollection services)
-        {
-            var opt = Env.GetValue<StorageOnTelegramSettings>();
-            //Telegram bot part.
-            var bot = new TelegramBotClient(
-                opt.BotToken,
-                new QueuedHttpClient(TimeSpan.FromMilliseconds(50))
-            );
-            services.AddSingleton<ITelegramBotClient>(bot);
-
-            //Telegram files limit is 50 mb.
-            //Note that with CacheAndNotWait you can operate with any files, but too big files will be not saved in telegram,
-            //so they will be unavailable after app restart.
-            services.AddSingleton(new TelegramFilesCloudOptions()
-            {
-                SaveResourcesChatId = Env.GetValue< StorageOnTelegramSettings>().SaveResourcesChatId,
-                CacheAndNotWait = true,
-                DeleteOlderFiles = false
-            });
-            services.AddSingleton<TelegramFilesCloud<FileMetadata>>();
-        }
-
         /// <summary>
         /// Redirect site root '/' to '/index.html'.
         /// </summary>

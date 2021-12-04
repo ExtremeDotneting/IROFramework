@@ -6,7 +6,6 @@ using IROFramework.Core.Consts;
 using IROFramework.Core.Models;
 using IROFramework.Core.Tools;
 using IROFramework.Core.Tools.AbstractDatabase;
-using IROFramework.Web.Models;
 using IROFramework.Web.Tools.JwtAuth;
 using IROFramework.Web.Tools.JwtAuth.Data;
 
@@ -20,11 +19,11 @@ namespace IROFramework.Web.Services.Auth
         readonly AuthSettings _authSettings;
         static bool _isInitOnce;
 
-        public UserAuthService(AbstractDbContext db, IJwtAuthManager authManager, AuthSettings authSettings)
+        public UserAuthService(IAbstractDatabase db, IJwtAuthManager authManager, AuthSettings authSettings)
         {
             _authManager = authManager;
             _authSettings = authSettings;
-            _dbSet = db.Users;
+            _dbSet = db.GetDbSet<UserModel, Guid>();
             InitOnce().Wait();
         }
 

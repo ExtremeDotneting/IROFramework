@@ -4,8 +4,10 @@ using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;
+using IRO.Mvc.CoolSwagger;
 using IRO.Storage;
 using IROFramework.Core.AppEnvironment;
+using IROFramework.Core.Models;
 using IROFramework.Web.Dto.FilesStorageDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -17,6 +19,7 @@ namespace IROFramework.Web.Controllers
 {
     [ApiController]
     [Authorize]
+    [SwaggerTagName("FilesStorage")]
     [Route(CommonConsts.ApiPath + "/files")]
     public class FilesStorageController : ControllerBase
     {

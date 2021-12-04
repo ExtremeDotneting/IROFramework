@@ -1,9 +1,9 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
+using IRO.Mvc.CoolSwagger;
 using IRO.Storage;
 using IROFramework.Core.AppEnvironment;
 using IROFramework.Core.Models;
-using IROFramework.Web.Models;
 using IROFramework.Web.Tools.Email;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IROFramework.Web.Controllers
 {
     [ApiController]
+    [SwaggerTagName("Storage")]
     [Authorize]
     [Route(CommonConsts.ApiPath + "/storage")]
     public class StorageController : ControllerBase

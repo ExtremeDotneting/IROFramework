@@ -14,7 +14,7 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnKeyValueStorage
     public class KeyValueStorageDatabaseSet<TModel, TId> : IDatabaseSet<TModel, TId>
         where TModel : IBaseModel<TId>
     {
-        readonly ConcurrentDictionary<TId, TModel> _dict;
+        ConcurrentDictionary<TId, TModel> _dict;
         readonly IKeyValueStorage _storage;
         readonly string _colName;
         readonly AsyncLock _lock = new AsyncLock();
@@ -23,9 +23,19 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnKeyValueStorage
         {
             _storage = storage;
             _colName = colName;
-            _dict= _storage.GetOrDefault<ConcurrentDictionary<TId, TModel>>("AbstractDatabaseCollention_" + colName)
-                .Result;
-            _dict??= new ConcurrentDictionary<TId, TModel>();
+            var t = Task.Run(async () =>
+            {
+                using (await _lock.LockAsync())
+                {
+                    _dict = await _storage
+                        .GetOrDefault<ConcurrentDictionary<TId, TModel>>("AbstractDatabaseCollection_" + colName)
+                        .ConfigureAwait(false);
+                    if (_dict == null)
+                    {
+                        _dict = new ConcurrentDictionary<TId, TModel>();
+                    }
+                }
+            });
         }
 
         public async Task<TModel> GetByIdAsync(TId id)
@@ -98,7 +108,7 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnKeyValueStorage
 
         async Task SaveStorage()
         {
-            await _storage.Set("AbstractDatabaseCollention_" + _colName, _dict);
+            await _storage.Set("AbstractDatabaseCollection_" + _colName, _dict);
         }
 
         object GetPropertyValue(TModel model, string propName)

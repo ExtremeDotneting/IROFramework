@@ -1,6 +1,5 @@
 ﻿using System.Threading.Tasks;
 using IROFramework.Core.Models;
-using IROFramework.Web.Models;
 using IROFramework.Web.Tools.JwtAuth.Data;
 
 namespace IROFramework.Web.Services.Auth
