@@ -14,23 +14,23 @@ namespace IROFramework.Core.StartupInit
         {
             services.AddLogging(logBuilder =>
             {
-                var currentLogLevel = (LogLevel)Enum.Parse(
-                    typeof(LogLevel),
-                    Env.GlobalSettings.LogLevel.ToString()
-                    );
-                logBuilder.AddFilter((loggerName, categoryName, logLevel) =>
-                {
-                    if (categoryName.StartsWith("TabletopHelperSite"))
-                        return true;
-                    if (categoryName.StartsWith(nameof(IROFramework)))
-                        return true;
-                    if (categoryName.StartsWith(nameof(IRO)))
-                        return true;
-                    if (categoryName.StartsWith("UndergroundIRO"))
-                        return true;
-                    return false;
-                });
-                logBuilder.SetMinimumLevel(currentLogLevel);
+                //var currentLogLevel = (LogLevel)Enum.Parse(
+                //    typeof(LogLevel),
+                //    Env.GlobalSettings.LogLevel.ToString()
+                //    );
+                //logBuilder.AddFilter((loggerName, categoryName, logLevel) =>
+                //{
+                //    if (categoryName.StartsWith("TEMPLATE_ASP_APP"))
+                //        return true;
+                //    if (categoryName.StartsWith(nameof(IROFramework)))
+                //        return true;
+                //    if (categoryName.StartsWith(nameof(IRO)))
+                //        return true;
+                //    if (categoryName.StartsWith("UndergroundIRO"))
+                //        return true;
+                //    return false;
+                //});
+                //logBuilder.SetMinimumLevel(currentLogLevel);
                 logBuilder.ClearProviders();
 
                 //logBuilder.AddConsole((opt) =>
