@@ -12,5 +12,4 @@
 
         public string AdminPassword { get; set; }
     }
-
 }

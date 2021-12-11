@@ -54,7 +54,16 @@ namespace IROFramework.Web.StartupInit
                 };
             });
 
+            AddGithubAuth(services);
+        }
 
+        static void AddGithubAuth(IServiceCollection services)
+        {
+            var githubAuthSettings = Env.GetValue<GithubAuthSettings>();
+            if (githubAuthSettings.Enabled)
+            {
+                services.AddSingleton(githubAuthSettings);
+            }
         }
 
         /// <summary>

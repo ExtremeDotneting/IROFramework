@@ -15,6 +15,12 @@ namespace IROFramework.Web.StartupInit
 {
     public static class CommonMvcStartupExtensions
     {
+        public static void AddBasis(this IServiceCollection services)
+        {
+            var globalSettings = Env.GetValue<GlobalSettings>();
+            services.AddSingleton(globalSettings);
+        }
+
         public static void IncreaseMaxFileUploadSize(this IApplicationBuilder app)
         {
             //Increase file upload size.

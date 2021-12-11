@@ -20,7 +20,7 @@ namespace IROFramework.Core.StartupInit
                 //    );
                 //logBuilder.AddFilter((loggerName, categoryName, logLevel) =>
                 //{
-                //    if (categoryName.StartsWith("TEMPLATE_ASP_APP"))
+                //    if (categoryName.StartsWith("DiplomaStatsCounter"))
                 //        return true;
                 //    if (categoryName.StartsWith(nameof(IROFramework)))
                 //        return true;
