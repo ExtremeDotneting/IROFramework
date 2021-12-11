@@ -63,6 +63,7 @@ namespace IROFramework.Web.StartupInit
             if (githubAuthSettings.Enabled)
             {
                 services.AddSingleton(githubAuthSettings);
+                services.AddSingleton<IGithubUserAuthService, GithubUserAuthService>();
             }
         }
 

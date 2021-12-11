@@ -12,7 +12,7 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnKeyValueStorage
     /// Store data in key-value storage. Just for tests.
     /// </summary>
     public class KeyValueStorageDatabaseSet<TModel, TId> : IDatabaseSet<TModel, TId>
-        where TModel : IBaseModel<TId>
+        where TModel : class, IBaseModel<TId>
     {
         ConcurrentDictionary<TId, TModel> _dict;
         readonly IKeyValueStorage _storage;
@@ -38,26 +38,34 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnKeyValueStorage
             });
         }
 
-        public async Task<TModel> GetByIdAsync(TId id)
+        public async Task<TModel> TryGetByIdAsync(TId id)
         {
             using (await _lock.LockAsync())
             {
-                return _dict[id];
+                if (_dict.TryGetValue(id, out var value))
+                {
+                    return value;
+                }
+                else
+                {
+                    return null;
+                }
             }
         }
 
-        public async Task<TModel> GetByPropertyAsync(string propName, object value)
+        public async Task<TModel> TryGetByPropertyAsync(string propName, object value)
         {
             using (await _lock.LockAsync())
             {
                 var model = _dict
                     .ToArray()
-                    .First((r) =>
+                    .Select(p=>p.Value)
+                    .FirstOrDefault((r) =>
                     {
-                        var propValue = GetPropertyValue(r.Value, propName);
+                        var propValue = GetPropertyValue(r, propName);
                         return propValue.Equals(value);
                     });
-                return model.Value;
+                return model;
             }
         }
 

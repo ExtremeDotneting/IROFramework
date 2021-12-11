@@ -29,7 +29,7 @@ namespace IROFramework.Web.Controllers
         /// <returns></returns>
         /// 
         [HttpGet("makeMeAdmin")]
-        public async Task<LoginResponseResponse> MakeMeAdmin()
+        public async Task<LoginResponse> MakeMeAdmin()
         {
             if (!Env.IsDebug)
             {
@@ -37,15 +37,8 @@ namespace IROFramework.Web.Controllers
             }
             var me = await this.GetCurrentUser();
             me = await _userAuthService.ChangeRole(me, UserRoles.Admin);
-
-            DeleteOldCookie();
             var authRes = _userAuthService.GenerateToken(me);
-            Response.Cookies.Append(CommonConsts.AuthTokenCookieParam, authRes.AccessToken);
-            return new LoginResponseResponse()
-            {
-                AccessToken = authRes.AccessToken,
-                RefreshToken = authRes.RefreshToken
-            };
+            return this.MakeLoginResponse(authRes);
         }
 
 
@@ -59,54 +52,29 @@ namespace IROFramework.Web.Controllers
         [HttpPost("logout")]
         public void Logout()
         {
-            DeleteOldCookie();
+            this.DeleteAuthCookie();
         }
 
         [HttpPost("refreshToken")]
-        public async Task<LoginResponseResponse> RefreshToken(RefreshTokenRequest dto)
+        public async Task<LoginResponse> RefreshToken(RefreshTokenRequest dto)
         {
-            DeleteOldCookie();
             var authRes = await _userAuthService.RefreshToken(dto.AccessToken, dto.RefreshToken);
-            Response.Cookies.Append(CommonConsts.AuthTokenCookieParam, authRes.AccessToken);
-            return new LoginResponseResponse()
-            {
-                AccessToken = authRes.AccessToken,
-                RefreshToken = authRes.RefreshToken
-            };
+            return this.MakeLoginResponse(authRes);
         }
 
         [HttpPost("loginByNickname")]
-        public async Task<LoginResponseResponse> LoginByNickname(LoginByNicknameRequest dto)
+        public async Task<LoginResponse> LoginByNickname(LoginByNicknameRequest dto)
         {
-            DeleteOldCookie();
             var authRes = await _userAuthService.Login(dto.Nickname, dto.Password);
-            Response.Cookies.Append(CommonConsts.AuthTokenCookieParam, authRes.AccessToken);
-            return new LoginResponseResponse()
-            {
-                AccessToken = authRes.AccessToken,
-                RefreshToken = authRes.RefreshToken
-            };
+            return this.MakeLoginResponse(authRes);
         }
 
         [HttpPost("registerByNickname")]
-        public async Task<LoginResponseResponse> RegisterByNickname(LoginByNicknameRequest dto)
+        public async Task<LoginResponse> RegisterByNickname(LoginByNicknameRequest dto)
         {
-            DeleteOldCookie();
             var authRes = await _userAuthService.Register(dto.Nickname, dto.Password);
-            Response.Cookies.Append(CommonConsts.AuthTokenCookieParam, authRes.AccessToken);
-            return new LoginResponseResponse()
-            {
-                AccessToken = authRes.AccessToken,
-                RefreshToken = authRes.RefreshToken
-            };
+            return this.MakeLoginResponse(authRes);
         }
 
-        void DeleteOldCookie()
-        {
-            if (Request.Cookies.ContainsKey(CommonConsts.AuthTokenCookieParam))
-            {
-                Response.Cookies.Delete(CommonConsts.AuthTokenCookieParam);
-            }
-        }
     }
 }

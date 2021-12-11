@@ -11,7 +11,7 @@ using IROFramework.Web.Tools.JwtAuth.Data;
 
 namespace IROFramework.Web.Services.Auth
 {
-    public class UserAuthService : IUserAuthService
+    class UserAuthService : IUserAuthService
     {
         readonly IDatabaseSet<UserModel, Guid> _dbSet;
 
@@ -73,6 +73,12 @@ namespace IROFramework.Web.Services.Auth
             return await Register(newUser);
         }
 
+        public async Task<AuthResult> LoginByUserId(Guid userId)
+        {
+            var user = await _dbSet.GetByIdAsync(userId);
+            return GenerateToken(user);
+        }
+
         public async Task<UserModel> ChangeRole(UserModel user, string role)
         {
             user.Role = role;
@@ -87,7 +93,7 @@ namespace IROFramework.Web.Services.Auth
             var guid = Guid.Parse(userIdStr);
             return await _dbSet.GetByIdAsync(guid);
         }
-        
+
         async Task CreateDefaultAdminUser()
         {
             if (string.IsNullOrWhiteSpace(_authSettings.AdminNickname) || string.IsNullOrWhiteSpace(_authSettings.AdminPassword))
@@ -131,7 +137,7 @@ namespace IROFramework.Web.Services.Auth
             await _dbSet.InsertAsync(newUser);
             return GenerateToken(newUser);
         }
-        
+
         public AuthResult GenerateToken(UserModel userModel)
         {
             var claims = new[]

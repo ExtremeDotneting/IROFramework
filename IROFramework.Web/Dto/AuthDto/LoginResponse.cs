@@ -1,6 +1,6 @@
 ﻿namespace IROFramework.Web.Dto.AuthDto
 {
-    public class LoginResponseResponse: IDevCommentResponse
+    public class LoginResponse: IDevCommentResponse
     {
         public string RefreshToken { get; set; }
 

@@ -4,11 +4,11 @@ using System.Threading.Tasks;
 namespace IROFramework.Core.Tools.AbstractDatabase
 {
     public interface IDatabaseSet<TModel, in TId>
-        where TModel : IBaseModel<TId>
+        where TModel : class, IBaseModel<TId>
     {
-        Task<TModel> GetByIdAsync(TId id);
+        Task<TModel> TryGetByIdAsync(TId id);
 
-        Task<TModel> GetByPropertyAsync(string propName, object value);
+        Task<TModel> TryGetByPropertyAsync(string propName, object value);
 
         Task<IEnumerable<TModel>> GetAllAsync();
 

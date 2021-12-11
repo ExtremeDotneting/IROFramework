@@ -17,6 +17,12 @@ namespace IROFramework.Core.Models
         public string Role { get; set; }
         #endregion
 
+        #region Github props.
+        public int Github_UserId { get; set; }
 
+        public string Github_Login { get; set; }
+
+        public string Github_AccessToken { get; set; }
+        #endregion
     }
 }

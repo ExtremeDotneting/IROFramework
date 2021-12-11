@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 namespace IROFramework.Web.Controllers.Crud
 {
     public abstract class BaseCrudController<TModel, TId> : ControllerBase
-        where TModel : IBaseModel<TId>
+        where TModel : class, IBaseModel<TId>
     {
         readonly IDatabaseSet<TModel, TId> _dbSet;
 

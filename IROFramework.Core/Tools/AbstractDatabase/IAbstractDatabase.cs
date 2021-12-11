@@ -3,9 +3,9 @@
     public interface IAbstractDatabase
     {
         IDatabaseSet<TModel, TId> GetDbSet<TModel, TId>(string name)
-            where TModel : IBaseModel<TId>;
+            where TModel : class, IBaseModel<TId>;
 
         IDatabaseSet<TModel, TId> GetDbSet<TModel, TId>()
-            where TModel : IBaseModel<TId>;
+            where TModel : class, IBaseModel<TId>;
     }
 }

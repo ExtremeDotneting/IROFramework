@@ -6,37 +6,33 @@ namespace IROFramework.Core.Tools.AbstractDatabase
 {
     public static class DatabaseSetExtensions
     {
-        public static async Task<TModel> TryGetByIdAsync<TModel, TId>(
+        public static async Task<TModel> GetByIdAsync<TModel, TId>(
             this IDatabaseSet<TModel, TId> dbSet,
             TId id
         )
-            where TModel : IBaseModel<TId>
+            where TModel : class, IBaseModel<TId>
         {
-            try
+            var model=await dbSet.TryGetByIdAsync(id);
+            if (model == null)
             {
-                return await dbSet.GetByIdAsync(id);
+                throw new NullReferenceException($"Record with id '{id}' not found.");
             }
-            catch
-            {
-                return default(TModel);
-            }
+            return model;
         }
 
-        public static async Task<TModel> TryGetByPropertyAsync<TModel, TId>(
+        public static async Task<TModel> GetByPropertyAsync<TModel, TId>(
             this IDatabaseSet<TModel, TId> dbSet,
             string propName, 
             object value
         )
-            where TModel : IBaseModel<TId>
+            where TModel : class, IBaseModel<TId>
         {
-            try
+            var model = await dbSet.TryGetByPropertyAsync(propName, value);
+            if (model == null)
             {
-                return await dbSet.GetByPropertyAsync(propName, value);
+                throw new NullReferenceException($"Record with '{propName}' == '{value}' not found.");
             }
-            catch
-            {
-                return default(TModel);
-            }
+            return model;
         }
 
         public static async Task<TModel> TryGetByPropertyAsync<TModel, TId>(
@@ -44,24 +40,7 @@ namespace IROFramework.Core.Tools.AbstractDatabase
             Expression<Func<TModel, object>> nameExpr,
             object value
         )
-            where TModel : IBaseModel<TId>
-        {
-            try
-            {
-                return await dbSet.GetByPropertyAsync(nameExpr, value);
-            }
-            catch
-            {
-                return default(TModel);
-            }
-        }
-
-        public static async Task<TModel> GetByPropertyAsync<TModel, TId>(
-            this IDatabaseSet<TModel, TId> dbSet, 
-            Expression<Func<TModel, object>> nameExpr,
-            object value
-            )
-            where TModel : IBaseModel<TId>
+            where TModel : class, IBaseModel<TId>
         {
             //Resolving name.
             string name = null;
@@ -78,8 +57,22 @@ namespace IROFramework.Core.Tools.AbstractDatabase
             {
                 throw new Exception("Can't resolve member name from expression.");
             }
+            return await dbSet.TryGetByPropertyAsync(name, value);
+        }
 
-            return await dbSet.GetByPropertyAsync(name, value);
+        public static async Task<TModel> GetByPropertyAsync<TModel, TId>(
+            this IDatabaseSet<TModel, TId> dbSet, 
+            Expression<Func<TModel, object>> nameExpr,
+            object value
+            )
+            where TModel : class, IBaseModel<TId>
+        {
+            var model = await TryGetByPropertyAsync<TModel, TId>(dbSet, nameExpr, value);
+            if (model == null)
+            {
+                throw new NullReferenceException($"Record with property value '{value}' not found.");
+            }
+            return model;
         }
     }
 }

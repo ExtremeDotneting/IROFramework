@@ -17,13 +17,13 @@ namespace IROFramework.Web.Controllers
     [Route(CommonConsts.ApiPath + "/auth/github")]
     public class GithubUserAuthController : ControllerBase
     {
-        readonly IUserAuthService _userAuthService;
+        readonly IGithubUserAuthService _githubUserAuthService;
         readonly GithubAuthSettings _githubAuthSettings;
         readonly GlobalSettings _globalSettings;
 
-        public GithubUserAuthController(IUserAuthService userAuthService, GithubAuthSettings githubAuthSettings, GlobalSettings globalSettings)
+        public GithubUserAuthController(IGithubUserAuthService githubUserAuthService, GithubAuthSettings githubAuthSettings, GlobalSettings globalSettings)
         {
-            _userAuthService = userAuthService;
+            _githubUserAuthService = githubUserAuthService;
             _githubAuthSettings = githubAuthSettings;
             _globalSettings = globalSettings;
         }
@@ -32,25 +32,19 @@ namespace IROFramework.Web.Controllers
         [HttpGet("login")]
         public async Task<IActionResult> Login()
         {
-            var redirectUri = $"{_globalSettings.ExternalUrl}/{CommonConsts.ApiPath}/auth/github/callback"; 
+            var redirectUri = $"{_globalSettings.ExternalUrl}/{CommonConsts.ApiPath}/auth/github/callback";
             var authUrl = $"https://github.com/login/oauth/authorize"
                               + $"?client_id={_githubAuthSettings.ClientId}&redirect_uri={redirectUri}";
             return new RedirectResult(authUrl);
         }
 
         [HttpGet("callback")]
-        public async Task Callback([FromQuery]string code)
+        public async Task<LoginResponse> Callback([FromQuery] string code)
         {
-            var github = new GitHubClient(new ProductHeaderValue(_githubAuthSettings.AppName));
-            var oauthReq = new OauthTokenRequest(
-                _githubAuthSettings.ClientId,
-                _githubAuthSettings.ClientSecret,
-                code
-            );
-            var tokenResp=await github.Oauth.CreateAccessToken(oauthReq);
-            tokenResp.AccessToken;
+            var authRes = await _githubUserAuthService.LoginOrRegisterUsingOauthCode(code);
+            return this.MakeLoginResponse(authRes);
         }
 
-        
+
     }
 }

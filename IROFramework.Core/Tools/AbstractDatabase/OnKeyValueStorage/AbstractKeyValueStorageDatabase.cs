@@ -14,7 +14,7 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnKeyValueStorage
             _storage = storage ?? throw new ArgumentNullException(nameof(storage));
         }
 
-        public IDatabaseSet<TModel, TId> GetDbSet<TModel, TId>(string name) where TModel : IBaseModel<TId>
+        public IDatabaseSet<TModel, TId> GetDbSet<TModel, TId>(string name) where TModel : class, IBaseModel<TId>
         {
             if (_storagesObjects.TryGetValue(name, out var storageObj))
             {
@@ -28,7 +28,7 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnKeyValueStorage
             }
         }
 
-        public IDatabaseSet<TModel, TId> GetDbSet<TModel, TId>() where TModel : IBaseModel<TId>
+        public IDatabaseSet<TModel, TId> GetDbSet<TModel, TId>() where TModel : class, IBaseModel<TId>
         {
             var name = typeof(TModel).Name;
             return GetDbSet<TModel, TId>(name);

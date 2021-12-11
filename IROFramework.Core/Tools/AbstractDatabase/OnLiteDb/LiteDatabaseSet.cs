@@ -6,7 +6,7 @@ using LiteDB;
 namespace IROFramework.Core.Tools.AbstractDatabase.OnLiteDb
 {
     public class LiteDatabaseSet<TModel, TId> : IDatabaseSet<TModel, TId>
-        where TModel : IBaseModel<TId>
+        where TModel : class, IBaseModel<TId>
     {
         readonly Func<LiteDatabase> _factory;
         readonly string _colName;
@@ -17,27 +17,23 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnLiteDb
             _colName = colName;
         }
 
-        public async Task<TModel> GetByIdAsync(TId id)
+        public async Task<TModel> TryGetByIdAsync(TId id)
         {
             using (var db = _factory())
             {
                 var col = db.GetCollection<TModel>(_colName);
                 var res = col.FindById(new BsonValue(id));
-                if (res == null)
-                    throw new Exception("Value not found in litedb.");
                 return res;
             }
         }
 
-        public async Task<TModel> GetByPropertyAsync(string propName, object value)
+        public async Task<TModel> TryGetByPropertyAsync(string propName, object value)
         {
             using (var db = _factory())
             {
                 var col = db.GetCollection<TModel>(_colName);
                 var query=Query.EQ(propName, new BsonValue(value));
                 var res = col.FindOne(query);
-                if (res == null)
-                    throw new Exception($"Property with name {propName} and value '{value}' not found.");
                 return res;
             }
         }
