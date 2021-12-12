@@ -33,9 +33,8 @@ namespace IROFramework.Web.Controllers
         public async Task<IActionResult> Login()
         {
             var redirectUri = $"{_globalSettings.ExternalUrl}/{CommonConsts.ApiPath}/auth/github/callback";
-            var authUrl = $"https://github.com/login/oauth/authorize"
-                              + $"?client_id={_githubAuthSettings.ClientId}&redirect_uri={redirectUri}";
-            return new RedirectResult(authUrl);
+            var url = _githubUserAuthService.GetLoginUrl(redirectUri);
+            return new RedirectResult(url);
         }
 
         [HttpGet("callback")]

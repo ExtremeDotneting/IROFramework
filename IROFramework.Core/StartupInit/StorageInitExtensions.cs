@@ -42,7 +42,7 @@ namespace IROFramework.Core.StartupInit
             //Telegram bot part.
             var bot = new TelegramBotClient(
                 storageOnTelegramSettings.BotToken,
-                new QueuedHttpClient(TimeSpan.FromMilliseconds(50))
+                new QueuedHttpClient(TimeSpan.FromMilliseconds(35))
             );
             services.AddSingleton<ITelegramBotClient>(bot);
         }

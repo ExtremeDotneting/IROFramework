@@ -24,6 +24,20 @@ namespace IROFramework.Web.Services.Auth
             _dbSet = db.GetDbSet<UserModel, Guid>();
         }
 
+        public string GetLoginUrl(string redirectUrl)
+        {
+            var client = ResolveClient();
+            var req = new OauthLoginRequest(_githubAuthSettings.ClientId)
+            {
+                RedirectUri = new Uri(redirectUrl)
+            };
+            foreach (var scope in _githubAuthSettings.Scopes)
+            {
+                req.Scopes.Add(scope);
+            }
+            return client.Oauth.GetGitHubLoginUrl(req).ToString();
+        }
+
         public async Task<AuthResult> LoginOrRegisterUsingOauthCode(string oauthCode)
         {
             var githubClient = ResolveClient();
@@ -42,7 +56,7 @@ namespace IROFramework.Web.Services.Auth
             if (user == null)
             {
                 authResult = await _userAuthService.Register(
-                    githubUser.Login, 
+                    githubUser.Login,
                     TextExtensions.Generate(10)
                     );
                 user = await _userAuthService.GetByToken(authResult.AccessToken);
@@ -58,6 +72,18 @@ namespace IROFramework.Web.Services.Auth
             await _dbSet.UpdateAsync(user);
 
             return authResult;
+        }
+
+        public async Task<GitHubClient> GetUserApiClient(Guid userId)
+        {
+            var user = await _dbSet.GetByIdAsync(userId);
+            var githubClient = ResolveClient();
+            if (user.Github_AccessToken == null)
+            {
+                throw new Exception($"User github access token not found for '{user.Nickname}'.");
+            }
+            githubClient.Credentials = new Credentials(user.Github_AccessToken);
+            return githubClient;
         }
 
 
