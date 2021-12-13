@@ -8,6 +8,7 @@ using IRO.Mvc.CoolSwagger;
 using IRO.Storage;
 using IROFramework.Core.AppEnvironment;
 using IROFramework.Core.Models;
+using IROFramework.Core.Tools;
 using IROFramework.Web.Dto.FilesStorageDto;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
@@ -145,7 +146,7 @@ namespace IROFramework.Web.Controllers
 
         async Task<UploadLogRecord> AddLogRecord(string fileName)
         {
-            var urlFileName = CustomUrlEncode(fileName);
+            var urlFileName = UrlExtensions.UrlEncode(fileName);
 
             var record = new UploadLogRecord()
             {
@@ -157,25 +158,6 @@ namespace IROFramework.Web.Controllers
             list.Add(record);
             await _storage.Set(UploadsLogCacheKey, list);
             return record;
-        }
-
-        string CustomUrlEncode(string fileName)
-        {
-            var spaceKey = "1122SPACE2211";
-            var slashKey = "1122SLASH2211";
-            var backSlashKey = "1122BACKSLASH2211";
-            var urlFileName = fileName
-                .Replace(" ", spaceKey)
-                .Replace("/", slashKey)
-                .Replace("\\", backSlashKey);
-
-            urlFileName = HttpUtility.UrlEncode(urlFileName);
-
-            urlFileName = urlFileName
-                .Replace(spaceKey, "%20")
-                .Replace(slashKey, "/")
-                .Replace(backSlashKey, "\\");
-            return urlFileName;
         }
 
         async Task<List<UploadLogRecord>> GetLogRecordsList()
@@ -224,7 +206,7 @@ namespace IROFramework.Web.Controllers
             var anchorsHtml = "";
             foreach (var fileName in fileNames)
             {
-                var urlFileName = CustomUrlEncode(fileName);
+                var urlFileName = UrlExtensions.UrlEncode(fileName);
                 var url = LinkTemplate + urlFileName;
                 var anchor = $"<a href=\"{url}\">{fileName}</a><br>\n";
                 anchorsHtml += anchor;

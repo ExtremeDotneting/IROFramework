@@ -6,6 +6,7 @@ using IROFramework.Core.Consts;
 using IROFramework.Core.Models;
 using IROFramework.Web.Dto.AuthDto;
 using IROFramework.Web.Services.Auth;
+using IROFramework.Web.Tools.JwtAuth.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
@@ -21,6 +22,20 @@ namespace IROFramework.Web.Controllers
         public UserAuthController(IUserAuthService userAuthService)
         {
             _userAuthService = userAuthService;
+        }
+
+        /// <summary>
+        /// Default login page. Used only in tests.
+        /// </summary>
+        [HttpGet("oauthCallback")]
+        public LoginResponse OAuthCallback([FromQuery] string accessToken, [FromQuery] string refreshToken)
+        {
+            var authRes = new AuthResult()
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+            return this.MakeLoginResponse(authRes);
         }
 
         /// <summary>
@@ -40,7 +55,6 @@ namespace IROFramework.Web.Controllers
             var authRes = _userAuthService.GenerateToken(me);
             return this.MakeLoginResponse(authRes);
         }
-
 
         [Authorize]
         [HttpGet("getMe")]
