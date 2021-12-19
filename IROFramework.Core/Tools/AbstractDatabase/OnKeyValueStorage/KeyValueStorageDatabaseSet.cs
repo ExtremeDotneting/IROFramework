@@ -53,19 +53,35 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnKeyValueStorage
             }
         }
 
-        public async Task<TModel> TryGetByPropertyAsync(string propName, object value)
+        public async Task<TModel> TryGetOneByPropertyAsync(string propName, object value)
         {
             using (await _lock.LockAsync())
             {
                 var model = _dict
                     .ToArray()
-                    .Select(p=>p.Value)
+                    .Select(p => p.Value)
                     .FirstOrDefault((r) =>
                     {
                         var propValue = GetPropertyValue(r, propName);
                         return propValue.Equals(value);
                     });
                 return model;
+            }
+        }
+
+        public async Task<IEnumerable<TModel>> GetByPropertyAsync(string propName, object value)
+        {
+            using (await _lock.LockAsync())
+            {
+                var models = _dict
+                    .ToArray()
+                    .Select(p => p.Value)
+                    .Where((r) =>
+                    {
+                        var propValue = GetPropertyValue(r, propName);
+                        return propValue.Equals(value);
+                    });
+                return models;
             }
         }
 

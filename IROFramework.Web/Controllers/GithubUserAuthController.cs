@@ -50,7 +50,13 @@ namespace IROFramework.Web.Controllers
         {
             var authRes = await _githubUserAuthService.LoginOrRegisterUsingOauthCode(code);
             redirectUrl = redirectUrl.RemoveEndingSlash();
-            redirectUrl += $"?accessToken={authRes.AccessToken.UrlEncode()}&refreshToken={authRes.RefreshToken.UrlEncode()}";
+
+            var startSymbol = "?";
+            if (redirectUrl.Contains("?"))
+            {
+                startSymbol = "&";
+            }
+            redirectUrl += $"{startSymbol}accessToken={authRes.AccessToken.UrlEncode()}&refreshToken={authRes.RefreshToken.UrlEncode()}";
             return new RedirectResult(redirectUrl);
         }
 

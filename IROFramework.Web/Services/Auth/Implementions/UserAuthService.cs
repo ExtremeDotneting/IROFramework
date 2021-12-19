@@ -45,7 +45,7 @@ namespace IROFramework.Web.Services.Auth
         {
             nick = nick.Trim();
             pass = pass.Trim();
-            var user = await _dbSet.GetByPropertyAsync(r => r.Nickname, nick);
+            var user = await _dbSet.GetOneByPropertyAsync(r => r.Nickname, nick);
             if (!HashExtensions.Compare(pass.Trim(), user.PasswordHash))
             {
                 throw new Exception("Password doesn't match.");
@@ -100,7 +100,7 @@ namespace IROFramework.Web.Services.Auth
             {
                 return;
             }
-            var user = await _dbSet.TryGetByPropertyAsync(r => r.Nickname, _authSettings.AdminNickname);
+            var user = await _dbSet.TryGetOneByPropertyAsync(r => r.Nickname, _authSettings.AdminNickname);
             if (user == null || !HashExtensions.Compare(_authSettings.AdminPassword, user.PasswordHash))
             {
                 var newUser = new UserModel()
@@ -129,7 +129,7 @@ namespace IROFramework.Web.Services.Auth
                 throw new NullReferenceException("New user pass hash is null.");
             }
 
-            var user = await _dbSet.TryGetByPropertyAsync(r => r.Nickname, newUser.Nickname);
+            var user = await _dbSet.TryGetOneByPropertyAsync(r => r.Nickname, newUser.Nickname);
             if (user != null)
             {
                 throw new Exception("User with this nickname exists in db.");

@@ -8,7 +8,9 @@ namespace IROFramework.Core.Tools.AbstractDatabase
     {
         Task<TModel> TryGetByIdAsync(TId id);
 
-        Task<TModel> TryGetByPropertyAsync(string propName, object value);
+        Task<TModel> TryGetOneByPropertyAsync(string propName, object value);
+
+        Task<IEnumerable<TModel>> GetByPropertyAsync(string propName, object value);
 
         Task<IEnumerable<TModel>> GetAllAsync();
 

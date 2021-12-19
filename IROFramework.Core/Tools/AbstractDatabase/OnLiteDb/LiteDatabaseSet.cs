@@ -27,13 +27,24 @@ namespace IROFramework.Core.Tools.AbstractDatabase.OnLiteDb
             }
         }
 
-        public async Task<TModel> TryGetByPropertyAsync(string propName, object value)
+        public async Task<TModel> TryGetOneByPropertyAsync(string propName, object value)
         {
             using (var db = _factory())
             {
                 var col = db.GetCollection<TModel>(_colName);
-                var query=Query.EQ(propName, new BsonValue(value));
+                var query = Query.EQ(propName, new BsonValue(value));
                 var res = col.FindOne(query);
+                return res;
+            }
+        }
+
+        public async Task<IEnumerable<TModel>> GetByPropertyAsync(string propName, object value)
+        {
+            using (var db = _factory())
+            {
+                var col = db.GetCollection<TModel>(_colName);
+                var query = Query.EQ(propName, new BsonValue(value));
+                var res = col.Find(query);
                 return res;
             }
         }

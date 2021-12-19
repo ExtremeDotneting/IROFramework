@@ -51,7 +51,7 @@ namespace IROFramework.Web.Services.Auth
             githubClient.Credentials = new Credentials(tokenResp.AccessToken);
             var githubUser = await githubClient.User.Current();
 
-            var user = await _dbSet.TryGetByPropertyAsync(r => r.Github_UserId, githubUser.Id);
+            var user = await _dbSet.TryGetOneByPropertyAsync(r => r.Github_UserId, githubUser.Id);
             AuthResult authResult;
             if (user == null)
             {

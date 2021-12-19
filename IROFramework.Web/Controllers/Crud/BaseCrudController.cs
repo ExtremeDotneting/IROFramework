@@ -26,9 +26,16 @@ namespace IROFramework.Web.Controllers.Crud
         }
 
         [Authorize(Roles = UserRoles.Admin)]
-        [HttpGet("getByPropertyValue")]
-        public async Task<TModel> GetByPropertyAsync(string propName, string value)
-        { ;
+        [HttpGet("getOneByProperty")]
+        public async Task<TModel> GetOneyPropertyAsync(string propName, string value)
+        {
+            return await _dbSet.TryGetOneByPropertyAsync(propName, value);
+        }
+
+        [Authorize(Roles = UserRoles.Admin)]
+        [HttpGet("getByProperty")]
+        public async Task<IEnumerable<TModel>> GetByPropertyAsync(string propName, string value)
+        {
             return await _dbSet.GetByPropertyAsync(propName, value);
         }
 

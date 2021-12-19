@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
 
@@ -27,7 +28,7 @@ namespace IROFramework.Core.Tools.AbstractDatabase
         )
             where TModel : class, IBaseModel<TId>
         {
-            var model = await dbSet.TryGetByPropertyAsync(propName, value);
+            var model = await dbSet.TryGetOneByPropertyAsync(propName, value);
             if (model == null)
             {
                 throw new NullReferenceException($"Record with '{propName}' == '{value}' not found.");
@@ -35,7 +36,7 @@ namespace IROFramework.Core.Tools.AbstractDatabase
             return model;
         }
 
-        public static async Task<TModel> TryGetByPropertyAsync<TModel, TId>(
+        public static async Task<TModel> TryGetOneByPropertyAsync<TModel, TId>(
             this IDatabaseSet<TModel, TId> dbSet,
             Expression<Func<TModel, object>> nameExpr,
             object value
@@ -57,22 +58,47 @@ namespace IROFramework.Core.Tools.AbstractDatabase
             {
                 throw new Exception("Can't resolve member name from expression.");
             }
-            return await dbSet.TryGetByPropertyAsync(name, value);
+            return await dbSet.TryGetOneByPropertyAsync(name, value);
         }
 
-        public static async Task<TModel> GetByPropertyAsync<TModel, TId>(
-            this IDatabaseSet<TModel, TId> dbSet, 
+        public static async Task<TModel> GetOneByPropertyAsync<TModel, TId>(
+            this IDatabaseSet<TModel, TId> dbSet,
             Expression<Func<TModel, object>> nameExpr,
             object value
-            )
+        )
             where TModel : class, IBaseModel<TId>
         {
-            var model = await TryGetByPropertyAsync<TModel, TId>(dbSet, nameExpr, value);
+            var model = await TryGetOneByPropertyAsync<TModel, TId>(dbSet, nameExpr, value);
             if (model == null)
             {
                 throw new NullReferenceException($"Record with property value '{value}' not found.");
             }
             return model;
+        }
+
+        public static async Task<IEnumerable<TModel>> GetByPropertyAsync<TModel, TId>(
+            this IDatabaseSet<TModel, TId> dbSet,
+            Expression<Func<TModel, object>> nameExpr,
+            object value
+        )
+            where TModel : class, IBaseModel<TId>
+        {
+            //Resolving name.
+            string name = null;
+            if (nameExpr.Body is MemberExpression memberExpr)
+            {
+                name = memberExpr.Member.Name;
+            }
+            else if (nameExpr.Body is UnaryExpression unaryExpr)
+            {
+                var memberExpr2 = (MemberExpression)unaryExpr.Operand;
+                name = memberExpr2.Member.Name;
+            }
+            else
+            {
+                throw new Exception("Can't resolve member name from expression.");
+            }
+            return await dbSet.GetByPropertyAsync(name, value);
         }
     }
 }
