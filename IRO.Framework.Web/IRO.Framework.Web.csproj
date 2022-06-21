@@ -1,7 +1,7 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
+    <TargetFramework>net5.0</TargetFramework>
   </PropertyGroup>
 
   <ItemGroup>
@@ -20,11 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\IROFramework.Core\IROFramework.Core.csproj" />
+    <Folder Include="Dto\FilesStorageDto\" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Dto\FilesStorageDto\" />
+    <ProjectReference Include="..\IRO.Framework.Core\IRO.Framework.Core.csproj" />
   </ItemGroup>
 
 
